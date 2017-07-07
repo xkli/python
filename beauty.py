@@ -1,6 +1,20 @@
 import urllib2
 from bs4 import BeautifulSoup
-import os
+import json
+
+
+class Img:
+    pic = ''
+    height = 0
+
+    def __init__(self, _pic, _height):
+        self.pic = _pic
+        self.height = _height
+
+
+def img2dict(self):
+    return {'pic': self.pic,
+            'height': self.height}
 
 
 def parse_html(fp, url):
@@ -17,9 +31,11 @@ def parse_html(fp, url):
         if isinstance(tag.get('class'), list):
             if 'layer-view' in tag.get('class'):
                 pins = tag.get('href')[6:-1]
-                img_url = "http:" + tag.find('img')['src']+'\n'
-                fp.write(img_url)
-                print img_url
+                img_url = "http:" + tag.find('img')['src']
+                img = Img(img_url, 0)
+                img_json = json.dumps(img, default=img2dict)
+                fp.write(img_json+',')
+                print img_json
     return pins
 
 
